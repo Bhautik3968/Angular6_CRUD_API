@@ -10,7 +10,7 @@ using TestAPI.Models;
 
 namespace TestAPI.Controllers
 {
-    [RoutePrefix("api")]
+    [RoutePrefix("api")]    
     [Authorize]
     public class ProductController : ApiController
     {
@@ -20,6 +20,10 @@ namespace TestAPI.Controllers
         public IHttpActionResult Products()
         {
             var data = _objContext.GetProducts();
+            if (data == null)
+            {
+                return NotFound();
+            }
             return Ok(data);
         }
         [Route("Products/{ID}")]
@@ -27,39 +31,25 @@ namespace TestAPI.Controllers
         public IHttpActionResult Products(int ID)
         {
             var data = _objContext.GetProductByID(ID);
+            if (data == null)
+            {
+                return NotFound();
+            }
             return Ok(data);
         }
 
         [Route("Product/{ID}")]
-        [HttpDelete]
-        [ResponseType(typeof(Response))]        
+        [HttpDelete]       
         public IHttpActionResult Product(int ID)
-        {
-            Response response = new Response();
-            try
-            {
-                response = _objContext.DeleteProduct(ID);
-            }
-            catch (Exception ex)
-            {
-                response = new Response { Success = false, StatusCode = 100, ResponseString = ex.Message };
-            }
-            return Ok(response);
+        {          
+            _objContext.DeleteProduct(ID);
+            return Ok(ID);
         }
         [Route("SaveProduct")]
-        [HttpPost]
-        [ResponseType(typeof(Product))]
+        [HttpPost]       
         public IHttpActionResult SaveProduct(Product _objProduct)
         {           
-            try
-            {
-                _objProduct = _objContext.SaveProduct(_objProduct);
-            }
-            catch (Exception ex)
-            {
-                _objProduct.Success = false;
-                _objProduct.ResponseString = ex.Message;                
-            }
+            _objProduct = _objContext.SaveProduct(_objProduct);
             return Ok(_objProduct);
         }
     }

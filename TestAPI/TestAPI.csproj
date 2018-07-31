@@ -142,6 +142,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="DataContext\ErrorDataContext.cs" />
+    <Compile Include="CustomExceptionFilter.cs" />
     <Compile Include="DataContext\DatabaseConnection.cs" />
     <Compile Include="DataContext\ProductDataContext.cs" />
     <Compile Include="DataContext\UserDataContext.cs" />
@@ -149,7 +151,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\Response.cs" />
+    <Compile Include="Models\Error.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

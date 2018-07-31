@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TestAPI.Models
 {
-    public class Product:Response
+    public class Product
     {
         public int ID { get; set; }
 

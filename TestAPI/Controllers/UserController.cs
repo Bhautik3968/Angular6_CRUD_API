@@ -15,7 +15,7 @@ namespace TestAPI.Controllers
         [HttpGet]
         [Authorize]
         [Route("GetUserClaims")]
-        public User GetUserClaims()
+        public IHttpActionResult GetUserClaims()
         {
             var identityClaims = (ClaimsIdentity)User.Identity;
             IEnumerable<Claim> claims = identityClaims.Claims;
@@ -26,13 +26,13 @@ namespace TestAPI.Controllers
                 ID = identityClaims.FindFirst("ID").Value,                
                 LoggedOn = identityClaims.FindFirst("LoggedOn").Value
             };
-            return model;
+            return Ok(model);
         }
 
         [HttpGet]
         [Route("Index")]
         public IHttpActionResult Index()
-        {
+        {           
             return Ok("Hello");
         }
     }
