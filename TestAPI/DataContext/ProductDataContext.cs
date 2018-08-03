@@ -31,7 +31,7 @@ namespace TestAPI.DataContext
         public Product SaveProduct(Product _objProduct)
         {
             var oPara = new DynamicParameters();
-            oPara.Add("@ID", _objProduct.ID, DbType.Int32, ParameterDirection.InputOutput);
+            oPara.Add("@ID", _objProduct.ID, DbType.Int32, ParameterDirection.Output);
             oPara.Add("@Name", _objProduct.Name.Trim(), DbType.String);
             oPara.Add("@Price", _objProduct.Price, DbType.String);
             oPara.Add("@Quantity", _objProduct.Quantity, DbType.Int32);
@@ -42,6 +42,21 @@ namespace TestAPI.DataContext
             }
             _objProduct.ID = oPara.Get<int>("@ID");
             return _objProduct;
+        }
+
+        public void UpdateProduct(Product _objProduct)
+        {
+            var oPara = new DynamicParameters();
+            oPara.Add("@ID", _objProduct.ID, DbType.Int32);
+            oPara.Add("@Name", _objProduct.Name.Trim(), DbType.String);
+            oPara.Add("@Price", _objProduct.Price, DbType.String);
+            oPara.Add("@Quantity", _objProduct.Quantity, DbType.Int32);
+            oPara.Add("@Image", _objProduct.Image, DbType.String);
+            using (IDbConnection connection = ClientDBConnection)
+            {
+                connection.Execute("UpdateProduct", oPara, commandType: CommandType.StoredProcedure);
+            }         
+           
         }
 
         public void DeleteProduct(int ID)

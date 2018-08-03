@@ -10,27 +10,23 @@ using TestAPI.Models;
 
 namespace TestAPI.Controllers
 {
-    [RoutePrefix("api")]    
+    [RoutePrefix("api/Product")]    
     [Authorize]
     public class ProductController : ApiController
     {
-        ProductDataContext _objContext = new ProductDataContext();
-        [Route("Products")]
+        ProductDataContext _objContext = new ProductDataContext();       
         [HttpGet]
-        public IHttpActionResult Products()
+        [Route("")]
+        public IHttpActionResult GetAll()
         {
-            var data = _objContext.GetProducts();
-            if (data == null)
-            {
-                return NotFound();
-            }
+            var data = _objContext.GetProducts();           
             return Ok(data);
-        }
-        [Route("Products/{ID}")]
-        [HttpGet]
-        public IHttpActionResult Products(int ID)
+        }  
+        [Route("{id}",Name = "GetProductByID")]    
+        [HttpGet()]
+        public IHttpActionResult GetById(int id)
         {
-            var data = _objContext.GetProductByID(ID);
+            var data = _objContext.GetProductByID(id);
             if (data == null)
             {
                 return NotFound();
@@ -38,18 +34,46 @@ namespace TestAPI.Controllers
             return Ok(data);
         }
 
-        [Route("Product/{ID}")]
+        [Route("{id}")]
         [HttpDelete]       
-        public IHttpActionResult Product(int ID)
-        {          
-            _objContext.DeleteProduct(ID);
-            return Ok(ID);
+        public IHttpActionResult Delete(int id)
+        {
+            var data = _objContext.GetProductByID(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            _objContext.DeleteProduct(id);
+            //return Content(HttpStatusCode.NoContent, "");
+            return Ok(id);            
         }
-        [Route("SaveProduct")]
-        [HttpPost]       
-        public IHttpActionResult SaveProduct(Product _objProduct)
-        {           
-            _objProduct = _objContext.SaveProduct(_objProduct);
+        
+        [HttpPost]  
+        [Route("")]     
+        public IHttpActionResult Add(Product _objProduct)
+        {
+            if (_objProduct == null)
+            {
+                return BadRequest();
+            }
+            _objProduct = _objContext.SaveProduct(_objProduct);           
+            return CreatedAtRoute("GetProductByID", new { id = _objProduct.ID }, _objProduct);
+        }
+        [Route("")]
+        [HttpPut]
+        public IHttpActionResult Update(Product _objProduct)
+        {
+            if (_objProduct == null || _objProduct.ID==0)
+            {
+                return BadRequest();
+            }
+            var data = _objContext.GetProductByID(_objProduct.ID);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            _objContext.UpdateProduct(_objProduct);
+            //return Content(HttpStatusCode.NoContent, "");
             return Ok(_objProduct);
         }
     }

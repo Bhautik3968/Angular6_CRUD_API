@@ -36,7 +36,7 @@ namespace TestAPI
             var response = new HttpResponseMessage()
             {
                 StatusCode= HttpStatusCode.InternalServerError,
-                Content = new StringContent("An unhandled exception was thrown by service."),
+                Content = new StringContent("An unexpected fault happened."),
                 ReasonPhrase = "Internal Server Error.Please Contact your Administrator."
             };
             actionExecutedContext.Response = response;
