@@ -17,6 +17,17 @@ namespace TestAPI.DataContext
             }
         }
 
+        public List<Product> SearchProducts(string searchText)
+        {
+            using (IDbConnection connection = ClientDBConnection)
+            {
+                var oPara = new DynamicParameters();
+                oPara.Add("@searchText", searchText, DbType.String);
+                return connection.Query<Product>("SearchProduct", oPara, commandType: CommandType.StoredProcedure).ToList();
+            }
+
+        }
+
         public Product GetProductByID(int ID)
         {
             using (IDbConnection connection = ClientDBConnection)
@@ -35,7 +46,7 @@ namespace TestAPI.DataContext
             oPara.Add("@Name", _objProduct.Name.Trim(), DbType.String);
             oPara.Add("@Price", _objProduct.Price, DbType.String);
             oPara.Add("@Quantity", _objProduct.Quantity, DbType.Int32);
-            oPara.Add("@Image", _objProduct.Image, DbType.String);
+            oPara.Add("@Image", _objProduct.Image, DbType.Binary);
             using (IDbConnection connection = ClientDBConnection)
             {
                 connection.Execute("SaveProduct", oPara, commandType: CommandType.StoredProcedure);
@@ -51,12 +62,12 @@ namespace TestAPI.DataContext
             oPara.Add("@Name", _objProduct.Name.Trim(), DbType.String);
             oPara.Add("@Price", _objProduct.Price, DbType.String);
             oPara.Add("@Quantity", _objProduct.Quantity, DbType.Int32);
-            oPara.Add("@Image", _objProduct.Image, DbType.String);
+            oPara.Add("@Image", _objProduct.Image, DbType.Binary);
             using (IDbConnection connection = ClientDBConnection)
             {
                 connection.Execute("UpdateProduct", oPara, commandType: CommandType.StoredProcedure);
-            }         
-           
+            }
+
         }
 
         public void DeleteProduct(int ID)
@@ -66,7 +77,7 @@ namespace TestAPI.DataContext
             using (IDbConnection connection = ClientDBConnection)
             {
                 connection.Execute("DeleteProduct", oPara, commandType: CommandType.StoredProcedure);
-            }           
+            }
         }
     }
 }

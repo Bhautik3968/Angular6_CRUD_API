@@ -22,11 +22,23 @@ namespace TestAPI.Controllers
             var data = _objContext.GetProducts();           
             return Ok(data);
         }  
-        [Route("{id}",Name = "GetProductByID")]    
+        [Route("{id:int}",Name = "GetProductByID")]    
         [HttpGet()]
         public IHttpActionResult GetById(int id)
         {
             var data = _objContext.GetProductByID(id);
+            if (data == null)
+            {
+                return NotFound();
+            }
+            return Ok(data);
+        }
+
+        [Route("{searchText}", Name = "SearchProduct")]
+        [HttpGet()]
+        public IHttpActionResult SearchProducts(string searchText)
+        {
+            var data = _objContext.SearchProducts(searchText);
             if (data == null)
             {
                 return NotFound();
